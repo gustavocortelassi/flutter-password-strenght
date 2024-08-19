@@ -30,6 +30,7 @@ class _PasswordGeneratorScreenState extends State<PasswordGeneratorScreen> {
   final TextEditingController _passwordController = TextEditingController();
   String _passwordStrength = "";
 
+// metodo para gerar senha
   void _generatePassword() {
     const chars =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*()-_=+";
@@ -47,6 +48,7 @@ class _PasswordGeneratorScreenState extends State<PasswordGeneratorScreen> {
     });
   }
 
+  // metodo para checar senha, se contem o caracter
   String _checkPasswordStrength(String password) {
     final hasUppercase = password.contains(RegExp(r'[A-Z]'));
     final hasLowercase = password.contains(RegExp(r'[a-z]'));
