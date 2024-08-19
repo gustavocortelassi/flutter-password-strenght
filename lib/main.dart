@@ -22,7 +22,6 @@ class PasswordGeneratorScreen extends StatefulWidget {
   const PasswordGeneratorScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _PasswordGeneratorScreenState createState() =>
       _PasswordGeneratorScreenState();
 }
@@ -32,32 +31,33 @@ class _PasswordGeneratorScreenState extends State<PasswordGeneratorScreen> {
   String _passwordStrength = "";
 
   void _generatePassword() {
-    const String chars =
+    const chars =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*()-_=+";
-    const int passwordLength = 15;
-    Random random = Random();
+    const passwordLength = 15;
+    final random = Random();
+
+    final password = List.generate(
+      passwordLength,
+      (index) => chars[random.nextInt(chars.length)],
+    ).join();
 
     setState(() {
-      _passwordController.text = List.generate(
-              passwordLength, (index) => chars[random.nextInt(chars.length)])
-          .join();
-      _passwordStrength = _checkPasswordStrength(_passwordController.text);
+      _passwordController.text = password;
+      _passwordStrength = _checkPasswordStrength(password);
     });
   }
 
   String _checkPasswordStrength(String password) {
-    if (password.contains(RegExp(r'[A-Z]')) &&
-        password.contains(RegExp(r'[a-z]')) &&
-        password.contains(RegExp(r'[0-9]')) &&
-        password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'))) {
-      return "Forte";
-    } else if (password.contains(RegExp(r'[A-Z]')) ||
-        password.contains(RegExp(r'[a-z]')) ||
-        password.contains(RegExp(r'[0-9]'))) {
-      return "Média";
-    } else {
-      return "Fraca";
-    }
+    final hasUppercase = password.contains(RegExp(r'[A-Z]'));
+    final hasLowercase = password.contains(RegExp(r'[a-z]'));
+    final hasDigits = password.contains(RegExp(r'[0-9]'));
+    final hasSpecial = password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
+
+    final strengthCount = [hasUppercase, hasLowercase, hasDigits, hasSpecial]
+        .where((condition) => condition)
+        .length;
+
+    return ['Fraca', 'Média', 'Forte'][strengthCount - 1];
   }
 
   @override
@@ -70,7 +70,7 @@ class _PasswordGeneratorScreenState extends State<PasswordGeneratorScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             ElevatedButton(
               onPressed: _generatePassword,
               child: const Text('Gerar'),
@@ -89,7 +89,7 @@ class _PasswordGeneratorScreenState extends State<PasswordGeneratorScreen> {
               ),
               style: const TextStyle(fontSize: 30),
             ),
-            
+            const SizedBox(height: 20),
             Text(
               'Força da senha: $_passwordStrength',
               style: TextStyle(
@@ -101,7 +101,6 @@ class _PasswordGeneratorScreenState extends State<PasswordGeneratorScreen> {
                         : Colors.blue,
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
